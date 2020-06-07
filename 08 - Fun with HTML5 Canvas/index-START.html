@@ -4,9 +4,96 @@
   <meta charset="UTF-8">
   <title>HTML5 Canvas</title>
 </head>
+
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
+
 <script>
+const canvas = document.querySelector('#draw');
+//you don't directly draw on the canvas element. you draw on the context
+ const ctx = canvas.getContext('2d');
+//then size up your canvas to make it exact size of window. by default it 800 x 800 px
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+// set base settings
+ctx.strokeStyle = '#BADA55';
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+// set line width
+ctx.lineWidth = 100;
+// for blendmode manipulation, such as transparency. many blendmodes available to play w
+ctx.globalCompositeOperation = 'multiply';
+
+
+//====================================================================
+//=================== Setting Initial Variables ==============================
+//====================================================================
+//set variable that sets to tue when you click down (draws when cursor is down and you
+//move mouse). is set to false whe the cursor is released. when you let go of the button
+// it sets back to false
+let isDrawing = false;
+// setting starting X and Y
+let lastX = 0;
+let lastY = 0;
+let hue = 0;
+let direction = true; // variable for manipulating linewidth
+
+// draw function that takes in an event and is called whenever the mouse is pressed
+// listens to when the cursor is activated
+function draw(e) {
+  if (!isDrawing) return; //stop function from running when no mousedown
+    console.log(e);
+  //to give an HSL value to the color of the line
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`; //hue w/ 100% saturation, and 50% lightness
+  //code to start the drawing of a line
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(e.offsetX, e.offsetY);
+  // nothing will be shown on the page until you call stroke
+  ctx.stroke(); 
+  //we want to update lastX and lastY variables to be where the darwing mouse
+  // position was last vs. drawing lines that always originate from zero
+  // lastX = e.offsetX;
+  // lastY = e.offsetY; 
+  // these lines can be done in a ES6 destrucutring array like so:
+  // to start drawing not at 0,0
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+  //to increment HSL value as mouse moves
+  hue++;
+  //this resets hue HSL value when cursor mvmnt goes over 360
+  if (hue >= 360){
+    hue = 0; 
+  };
+  //for incrementing line width. if Lwidth greater than 100 or less than 1
+  // flip the direction  
+  if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1){
+    direction = !direction;
+  };
+  // depending on what direction is, either increment or decrement Lwidth
+  if (direction){
+    //incrementing from 0 to 100 , but when you hit 100, decerement (100, 99, 98, 97 etc)
+    ctx.lineWidth++;
+  } else {
+    ctx.lineWidth--;
+  };
+};
+//=====================================================================
+//=============== Click AND DRAG FUNCTIONALITY HERE ===================
+//=====================================================================
+
+//listen for mouseDown to turn isDrawing to True AND to place origin 
+//of newly drawn line to current mouse location
+canvas.addEventListener('mousedown', (e) => {
+isDrawing = true;
+[lastX, lastY] = [e.offsetX, e.offsetY];
+}); 
+//listen for mouseMove event on the canvas
+canvas.addEventListener('mousemove', draw);
+//listen for mouseUp to turn isDrawing to false
+canvas.addEventListener('mouseup', () => isDrawing = false); 
+//listen for mouseOut,when mouse goes outside of page, to turn isDrawing to false
+canvas.addEventListener('mouseout', () => isDrawing = false); 
+
 </script>
 
 <style>
