@@ -9,37 +9,116 @@
   <p onClick="makeGreen()">×BREAK×DOWN×</p>
 
   <script>
-    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'Hugo', age: 8 }];
 
     function makeGreen() {
       const p = document.querySelector('p');
       p.style.color = '#BADA55';
       p.style.fontSize = '50px';
     }
+    // if an element is being run by js, and you don't know which js is doing 
+    // what to it, you can inspect it in Developer Tools / find it on the DOM 
+    // Right click on it and select "Break On", and then "Attribute Modifications"
+    // Now, when you click on it, it will pop a debugger command and
+    // it will pause exactly where it is executing and will show us the line of 
+    // code that is causing that is causing that attribute to occur.
+    // take debugger off by going back to elements panel and taking the Break On off
+    // and then click "play" on debugger
 
     // Regular
+    console.log('Hello World');
+    
 
     // Interpolated
-
-    // Styled
-
-    // warning!
-
-    // Error :|
-
-    // Info
-
-    // Testing
+    // interpolate values into console.log
+    //interpolates what you have passed in second one into the first one
+    console.log('Hello I am a %s', '🥳 girl');
+    //ES6 interpolation with backticks
+    let profession = 'developer';
+    console.log(`Hello I am a ${profession}`);
 
     // clearing
+    console.clear(); //will clear the console
+    
+    // Styled
+    // you can style the text with %c before what you are writing
+    // and pass the attributes as the second argument
+    console.log('%c Hello I am a software developer', 'font-size:50px; background:red; text-shadow:10px 10px 0 blue');
+
+
+    // warning!
+    // provides an orange warning ! flag in the console
+    console.warn('OH NOOOOO');
+
+    // Error :|
+    // displays an error in the console
+    // also gives the strack trace of where it got called
+    console.error('SHITTTT!');
+
+    // Info
+    console.info('Crocodiles eat 3-4 people a year');
+
+    // Testing
+    // to check if things are true
+    console.assert(1 === 2, 'That is wrong!'); // only fires when sthng is wrong
+    //example 2: grab p from page and check for class' names contain
+    const p = document.querySelector('p');
+    console.assert(p.classList.contains('meow'), 'That is wrong!'); 
 
     // Viewing DOM Elements
+    console.log(p); // this gives you the element console logged
+    console.dir(p); //gives you a dropdown for all the methods, properties
+    // classList available on that element
 
     // Grouping together
+    dogs.forEach(dog => {
+      console.group(`${dog.name}`);
+      console.log(`This is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.log(`${dog.name} is ${dog.age *7} dog years old`);
+      console.groupEnd(`${dog.name}`);
+    }) //groups all dogs' in one cluster that can be collapsed
+// you can switch up .group by .groupCollapsed and by default you ge a collapsed 
+//group. by default they will be collapsed
+dogs.forEach(dog => {
+      console.groupCollapsed(`${dog.name}`);
+      console.log(`This is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.log(`${dog.name} is ${dog.age *7} dog years old`);
+      console.groupEnd(`${dog.name}`);
+    }) //you can crack open the one you are looking for and see all the info for that specific one
+    
 
     // counting
+    // allows you to count however many times you use a specific
+    // word or number or object or Dom node or anything
+    console.count('Mouz');
+    console.count('Phil');
+    console.count('Abir');
+    console.count('Mouzie');
+    console.count('Abir');
+    console.count('Mouz'); //tells you how many times you ran it
+    console.count('Phil'); // how many you've iterated over
+    console.count('Mouz');
+    console.count('Abir');
+    console.count('Phil');
 
     // timing
+// to see how long processes take. gives a quick idea for how long things are taking
+// start a timer, do sthng that take time achieve
+console.time('fetching data');
+//do sthgn that takes time
+fetch('https://api.github.com/users/wesbos')
+    .then(data => data.json())
+    .then(data => {
+      //when process is done, run timeEnd and pass in the same string you used to   //run it.
+      console.timeEnd('fetching data');
+      console.log(data); //if you want to see fetched data
+    });
+
+//finally take an array of objects and if they have the same properties, 
+//display them in a nice table
+console.table(dogs);
 
   </script>
 </body>
