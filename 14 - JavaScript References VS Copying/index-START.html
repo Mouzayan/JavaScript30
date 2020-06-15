@@ -7,48 +7,122 @@
 <body>
 
   <script>
+
+    // *** difference between a copy and a reference gets very complicated, esp
+    // when there is nested data
+
     // start with strings, numbers and booleans
+    let age = 100;
+    let age2 = age;
+    console.log(age, age2);
+    age = 200;
+    console.log(age, age2);
+
+    // console.clear();
+
+    // try in a string. if you change the original one
+    // it will not update the other one referencing the original
+    let name = "wes";
+    let name2 = name; 
+    console.log(name, name2);
+    name = 'wesley';
+    console.log(name, name2);
+
+    console.clear();
 
     // Let's say we have an array
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+    // and we want to make a copy of the array
+    const team = players;
+    console.log(players, team);
 
-    // and we want to make a copy of it.
+    // if we change value of the 3rd index in the array, it is going to update
+    // the value of the original array. so team is not really a copy
+    // no bueno. by editing the reference to the original (team), it also 
+    // edited the original 
 
-    // You might think we can just do something like this:
+    // team[3] = 'Lux';
+    // console.log(players, team);
 
-    // however what happens when we update that array?
+    // to make a copy vs making a reference, here are a number of ways:
+    // make a copy using the slice method, passing nothing into it. this 
+    // will return the full array as a copy
+    const team2 = players.slice(); 
+    console.log(team2);
+    console.clear();
 
-    // now here is the problem!
+    // another way is to create a new empty array, and concat 
+    // the old one into it
+    const team3 = [].concat(players); // concatonates all items from players
+    // array into team 3 empty array
+    console.log(team3);
+    console.clear();
 
-    // oh no - we have edited the original array too!
+    // another way is to use the ES6 Spread
+    const team4 = [... players]; // spreads original array iterables into new array
+    console.log(team4);
+    console.clear();
 
-    // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+    // or use Array.from() method
+    const team5 = Array.from(players);
+    team5[3] = 'Mouzie'; 
+    console.log(team5, players);
 
-    // So, how do we fix this? We take a copy instead!
+    // to make a copy of objects vs. a reference which will modify the original
+    // when changes are made, use "object.assign()" which
+    // you start w a blank object, pass it the object you want to copy
+    // all the properties from, and you also pass in the properties
+    // you want to modify or add to the object 
 
-    // one way
-
-    // or create a new array and concat the old one in
-
-    // or use the new ES6 Spread
-
-    // now when we update it, the original one isn't changed
-
-    // The same thing goes for objects, let's say we have a person object
-
-    // with Objects
+    // original object
     const person = {
       name: 'Wes Bos',
       age: 80
     };
+    // and fold in the properties you wish to overwrite and update
+    const person2 = Object.assign({}, person, {age:12, number: 90});
+    console.log(person2);
+    console.log(person); // original has not changed
 
-    // and think we make a copy:
 
-    // how do we take a copy instead?
+    // We will hopefully soon see the object ...spread. 
+    // object spread is not in JS yet.  but it will look like this
+    // const person3 = {... person};  // spreads into an object
 
-    // We will hopefully soon see the object ...spread
+    // object assign is very shallow. only goes one level deep. does not 
+    // work on objects with nested properties like in this case
+    const teacher = {
+      name: 'Wes',
+      age: 100,
+      social: {
+        twitter: '@wesbos',
+        facebook: 'wesbos.developer'
+      }
+    };
+    console.log(teacher);
+    console.clear();
 
-    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    // to make a copy of this where you update the nested properties
+    const teacher2 = Object.assign({}, teacher)
+    teacher2.social.twitter = '@coolman';
+    console.log(teacher2);
+    console.log(teacher); // *** it has also updated the original, so this is
+    // no good.  to do it without updating original, there is a workaround that 
+    // is convoluted, not recommended, yet works
+    console.clear();
+    // object.assign only goes one level deep. 
+    // cheating way deep clone
+    teacher3 = JSON.parse(JSON.stringify(teacher));
+    // takes the original object and immediately turns it into a string, 
+    // then takes the string and JSON.parse it, to turns it back into an object
+    // so the reference to the original is broken so you get a full copy
+    // from a performance perspective, this is not great.
+    // this way is a deep clone 
+    teacher2.social.twitter = '@tallman';
+    console.log(teacher3);
+    console.log(teacher);
+    // and it has worked! yet in an over the top way
+
 
   </script>
 
